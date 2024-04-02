@@ -2,8 +2,21 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Demo hosted on Netlify : 
-[TodoList](https://quadbtechtodolist.netlify.app/)
+## Demo : 
+Demo hosted on Netlify: [TodoList](https://quadbtechtodolist.netlify.app/)
+
+##Screen Recording
+### Desktop View
+
+
+https://github.com/rahulkumarbalai/TodoList/assets/115142327/11ba7c43-a7be-408e-95aa-d86db4148797
+
+
+### Mobile View
+
+
+https://github.com/rahulkumarbalai/TodoList/assets/115142327/6db0dbff-a751-4001-9a87-edcc2a483936
+
 
 ## Available Scripts
 
