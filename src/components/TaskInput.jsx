@@ -1,149 +1,116 @@
-import {
-  TextField,
-  Button,
-  Typography,
-  Checkbox,
-  List,
-  ListItem,
-  Container,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import React from "react";
+import { TextField, Grid, Container, Button } from "@mui/material";
+import { connect } from "react-redux";
+import * as actionTypes from "../store/actions";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-import { useState } from "react";
-
-const useStyles = makeStyles({
-  input: {
-    width: "70%",
-    marginBottom: 30,
-  },
-  addButton: {
-    height: 55,
-    marginBottom: 30,
-  },
-  container: {
-    textAlign: "center",
-    marginTop: 100,
-  },
-  list: {
-    width: "80%",
-    margin: "auto",
-    display: "flex",
-    justifyContent: "space-around",
-    border: "1px solid light-gray",
-  },
-  text: {
-    width: "70%",
-  },
-  listButtons: {
-    marginLeft: 10,
+const theme = createTheme({
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          marginTop: "40px",
+          marginBottom: "20px",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          marginTop: "10px",
+          marginBottom: "10px",
+        },
+      },
+    },
   },
 });
 
-function TaskInput() {
-  const [inputVal, setInputVal] = useState("");
-  const [todos, setTodos] = useState([]);
-  const [isEdited, setIsEdited] = useState(false);
-  const [editedId, setEditedId] = useState(null);
-  const classes = useStyles();
+const TaskInput = ({
+  title,
+  setTitle,
+  addItem,
+  editItem,
+  edit,
+  error,
+  setError,
+}) => {
+  const handleChange = (event) => {
+    const title = event.target.value;
 
-  const onChange = (e) => {
-    setInputVal(e.target.value);
+    setTitle(title);
+    if (title.length === 0) {
+      setError("Please enter title");
+    } else {
+      setError("");
+    }
   };
 
   const handleClick = () => {
-    if (!isEdited) {
-      setTodos([
-        ...todos,
-        { val: inputVal, isDone: false, id: new Date().getTime() },
-      ]);
-    } else {
-      setTodos([...todos, { val: inputVal, isDone: false, id: editedId }]);
+    if (title.length === 0) {
+      setError("Please enter title");
+      return;
     }
-    setInputVal("");
-    setIsEdited(false);
-  };
-
-  const onDelete = (id) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
-  };
-
-  const handleDone = (id) => {
-    const updated = todos.map((todo) => {
-      if (todo.id === id) {
-        todo.isDone = !todo.isDone;
-      }
-      return todo;
-    });
-    setTodos(updated);
-  };
-
-  const handleEdit = (id) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    const editVal = todos.find((todo) => todo.id === id);
-    setEditedId(editVal.id);
-    setInputVal(editVal.val);
-    setTodos(newTodos);
-    setIsEdited(true);
+    if (edit) {
+      editItem();
+    } else {
+      addItem();
+    }
   };
 
   return (
-    <Container component="main" className={classes.container}>
-      <TextField
-        variant="outlined"
-        onChange={onChange}
-        label="type your task"
-        value={inputVal}
-        className={classes.input}
-      />
-      <Button
-        size="large"
-        variant={isEdited ? "outlined" : "contained"}
-        color="primary"
-        onClick={handleClick}
-        className={classes.addButton}
-        disabled={inputVal ? false : true}
-      >
-        {isEdited ? "Edit Task" : "Add Task"}
-      </Button>
-      <List>
-        {todos.map((todo) => {
-          return (
-            <>
-              <ListItem divider="bool" className={classes.list}>
-                <Checkbox
-                  onClick={() => handleDone(todo.id)}
-                  checked={todo.isDone}
-                />
-                <Typography
-                  className={classes.text}
-                  style={{ color: todo.isDone ? "green" : "" }}
-                  key={todo.id}
-                >
-                  {todo.val}
-                </Typography>
-                <Button
-                  onClick={() => handleEdit(todo.id)}
-                  variant="contained"
-                  className={classes.listButtons}
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => onDelete(todo.id)}
-                  color="secondary"
-                  variant="contained"
-                  className={classes.listButtons}
-                >
-                  delete
-                </Button>
-              </ListItem>
-            </>
-          );
-        })}
-      </List>
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="sm">
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="center"
+          marginRight="200px"
+        >
+          <Grid
+            item
+            md={12}
+            sx={{
+              mr: { xs: "20px" },
+            }}
+          >
+            <TextField
+              value={title}
+              onChange={handleChange}
+              error={!!error}
+              helperText={error}
+              id="outlined-basic"
+              fullWidth
+              label="Enter Title"
+              multiline
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item sx={{ width: "auto" }}>
+            <Button variant="contained" color="primary" onClick={handleClick}>
+              {edit ? "Edit" : "Add"}
+            </Button>
+          </Grid>
+        </Grid>
+      </Container>
+    </ThemeProvider>
   );
-}
+};
 
-export default TaskInput;
+const mapStateToProps = (state) => {
+  return {
+    title: state.title,
+    edit: state.edit,
+    error: state.error,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setTitle: (title) => dispatch(actionTypes.setTitle(title)),
+    setError: (error) => dispatch(actionTypes.setError(error)),
+    addItem: () => dispatch(actionTypes.addItem()),
+    editItem: () => dispatch(actionTypes.editItem()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskInput);
