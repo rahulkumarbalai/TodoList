@@ -17,7 +17,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          marginTop: "10px",
+          marginTop: "22px",
           marginBottom: "10px",
         },
       },
@@ -64,7 +64,6 @@ const TaskInput = ({
           container
           alignItems="center"
           justifyContent="center"
-          marginRight="200px"
         >
           <Grid
             item
