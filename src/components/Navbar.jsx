@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -29,14 +30,21 @@ const Navbar = () => {
               TodoList
             </Typography>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button color="inherit" sx={{ mr: 2 }}>
-                <AddTaskIcon sx={{ mr: 1 }} />
-                Add Task
-              </Button>
-              <Button color="inherit">
-                <ListAltIcon sx={{ mr: 1 }} />
-                View Tasks
-              </Button>
+              <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+                <Button color="inherit" sx={{ mr: 2 }}>
+                  <AddTaskIcon sx={{ mr: 1 }} />
+                  Add Task
+                </Button>
+              </Link>
+              <Link
+                to="/TasksList"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <Button color="inherit">
+                  <ListAltIcon sx={{ mr: 1 }} />
+                  View Tasks
+                </Button>
+              </Link>
             </Box>
           </Toolbar>
         </AppBar>
@@ -53,11 +61,19 @@ const Navbar = () => {
       >
         <BottomNavigationAction
           label="Add Task"
-          icon={<AddTaskIcon fontSize="medium" />}
+          icon={
+            <Link to="/">
+              <AddTaskIcon fontSize="medium" />
+            </Link>
+          }
         />
         <BottomNavigationAction
           label="View Task"
-          icon={<AssignmentIcon fontSize="medium" />}
+          icon={
+            <Link to="/TasksList">
+              <AssignmentIcon fontSize="medium" />
+            </Link>
+          }
         />
       </BottomNavigation>
     </>
